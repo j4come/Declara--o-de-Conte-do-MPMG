@@ -1,0 +1,618 @@
+
+'####ABRIRTELADECADASTRO####'
+
+Private Sub cadastrarremetente_Click()
+cadastro.Show
+End Sub
+
+Private Sub caixacep1_Change()
+
+ Sheets("Declaração").Range("g13").Value = caixacep1.Text '-----> Insere na célula o cep
+
+End Sub
+
+'######CIDADE-DESTINATÁRIO#########'
+
+Private Sub caixacidade1_Change()
+    caixanome1.Clear 'NOTA:limpa sempre q seleciona um novo'
+    Dim opcao As String
+    opcao = caixacidade1.Value
+    
+    Dim comarcas As String
+    
+    'MsgBox opcao
+     
+    Worksheets("Comarcas").Range("F2").AutoFilter Field:=6, Criteria1:=opcao   'filtra segundo a opção escolhida no combobox'
+    
+    For Each cell _
+    In Range(ActiveSheet.Range("a2"), ActiveSheet.Range("a2714").End(xlUp)).SpecialCells(xlCellTypeVisible) 'manda nome p/ caixanome'
+    caixanome1.AddItem (cell.Value) 'filtra e não aparece as celulas vazias, e tbm acumula
+     Sheets("Declaração").Range("G12").Value = caixacidade1.Text '-----> Insere na célula o valor de cidade
+   
+    Next cell
+End Sub
+'##CERREGA-LISTACIDADE-SEM-REPETIR##'
+Sub carrega_lista()
+    
+    Do
+    Pesquisa = Range("F2").Address & ":" & ActiveCell.Address
+    Contar = WorksheetFunction.CountIf(comarcas.Range(Pesquisa), ActiveCell.Text)
+    If Contar <= 1 Then
+    caixacidade1.AddItem ActiveCell.Text
+    End If
+    
+    ActiveCell.Offset(1, 0).Select
+    If ActiveCell.Value = "" Then
+    Exit Sub
+    End If
+    Loop
+End Sub
+
+Private Sub caixacidade1_AfterUpdate()
+    Dim opcao As String
+   
+    
+End Sub
+
+
+Private Sub caixacpf_Change()
+
+End Sub
+
+Private Sub caixacpf1_Change()
+
+End Sub
+
+Private Sub caixaend_Change()
+
+End Sub
+
+
+
+
+
+'#NOME DESTINATÁRIO#'
+
+Private Sub caixanome1_change()
+
+    Dim nome As String
+    
+    Dim endereço As String
+    Dim numero As String
+    Dim complemento As String
+    Dim bairro As String
+    
+            
+    nome = caixanome1.Value
+    
+    'MsgBox cidade
+    On Error Resume Next
+    endereco = Application.WorksheetFunction.VLookup(nome, Sheets("Comarcas").Range("A2:G10000"), 2, False) 'exibe endereço segundo o nome'
+    numero = Application.WorksheetFunction.VLookup(nome, Sheets("Comarcas").Range("A2:G10000"), 3, False)
+    complemento = Application.WorksheetFunction.VLookup(nome, Sheets("Comarcas").Range("A2:G10000"), 4, False)
+    bairro = Application.WorksheetFunction.VLookup(nome, Sheets("Comarcas").Range("A2:G10000"), 5, False)
+    
+       
+    caixaend1.Text = endereco & ", Nº" & numero & " - " & complemento & " Bairro: " & bairro
+      Sheets("Declaração").Range("F7").Value = caixanome1.Text '-----> Insere na célula o valor nome
+   
+    'MsgBox endereco
+    
+  
+    
+End Sub
+
+
+
+
+'#ENDEREÇO-DESTINATÁRIO#'
+
+Private Sub caixaend1_Change()
+    
+    Dim endereco As String
+    Dim Cep As String
+            
+    endereco = caixanome1.Text
+    'MsgBox endereco
+    On Error Resume Next
+    Cep = Application.WorksheetFunction.VLookup(endereco, Sheets("Comarcas").Range("A2:G10000"), 7, False)
+   'MsgBox cep
+    caixacep1.Text = Cep
+    'MsgBox endereco
+    Sheets("Declaração").Range("F9").Value = caixaend1.Text '-----> Insere na célula o valor endereço
+    
+
+    
+End Sub
+
+'CAIXAS-TOTAIS'
+
+'----------------LIMITA PARA SOMENTE Nº--------------------'
+Private Sub caixatotaisquant_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+ 
+  If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(caixatotaisquant.Text) >= 2 Then 'NOTA: Limita para Nº'
+        KeyAscii.Value = 0
+    Else
+    
+    
+    
+End If
+End Sub
+
+'VALOR
+'----------------LIMITA PARA SOMENTE Nº--------------------'
+Private Sub caixatotaisvalor_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+ 
+  If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(caixatotaisvalor.Text) >= 8 Then 'NOTA: Limita para Nº'
+        KeyAscii.Value = 0
+    Else
+    If Len(caixatotaisvalor.Text) = 0 Then
+            caixatotaisvalor.Text = caixatotaisvalor.Text & "R$"
+'NOTA: para inserir tudop de uma vez, se usa um IF's/ para em locais separados, coloca-se mais IF's
+        End If
+    
+End If
+End Sub
+
+Private Sub caixauf1_Change()
+
+End Sub
+
+Private Sub cancelar_button_Click()
+Sheets("Inicio").Activate 'leva para planilha de incio
+Sheets("Declaração").Range("A16:I21") = "" '##LIMPAR-LISTA-TUDO-AO-SAIR##'
+'------------------------------------------'
+    Unload FormularioDeclaracao
+    'NOTA:para fechar o formulário que esta usando, basta unload. para fechar outro formulário, tem que declarar o nome'
+    
+    Dim xAF As AutoFilter 'NOTA:código para limpar filtros na quando clicar em sair'
+    Dim xFs As Filters
+    Dim xLos As ListObjects
+    Dim xLo As ListObject
+    Dim xRg As Range
+    Dim xWs As Worksheet
+    Dim xIntC, xF1, xF2, xCount As Integer
+    Application.ScreenUpdating = False
+    On Error Resume Next
+    For Each xWs In Application.Worksheets
+        xWs.ShowAllData
+        Set xLos = xWs.ListObjects
+        xCount = xLos.Count
+        For xF1 = 1 To xCount
+         Set xLo = xLos.Item(xF1)
+         Set xRg = xLo.Range
+         xIntC = xRg.Columns.Count
+         For xF2 = 1 To xIntC
+            xLo.Range.AutoFilter Field:=xF2
+         Next
+        Next
+    Next
+    Application.ScreenUpdating = True
+    
+    ThisWorkbook.Save 'salvar ao sair
+    
+    End Sub
+'##HABILITAR ADMIN##
+
+Private Sub CheckBox1_Click()
+    Call ShowAll
+End Sub
+
+Sub ShowAll()
+    ActiveWindow.DisplayHorizontalScrollBar = True
+    ActiveWindow.DisplayVerticalScrollBar = True
+    ActiveWindow.DisplayHeadings = True
+    ActiveWindow.DisplayWorkbookTabs = True
+    Application.DisplayStatusBar = True
+    Application.ExecuteExcel4Macro "show.toolbar(""Ribbon"",True)"
+End Sub
+
+'#declarante-assinatura'
+Private Sub declarante_Change()
+Sheets("Declaração").Range("D32").Value = declarante.Text
+End Sub
+
+
+Private Sub limpardeclarante_Click()
+declarante = ""
+matricula = ""
+End Sub
+
+ '#matricula#'
+Private Sub matricula_Change()
+Sheets("Declaração").Range("G32").Value = matricula.Text
+End Sub
+
+Private Sub destinatario_frame_Click()
+
+End Sub
+ '####IMPRIMIR####'
+
+Private Sub gerar_button_Click()
+
+
+caminho_pasta = VBA.Environ("USERPROFILE") + "\Desktop\Declarações_de_Conteúdo"
+    'Variavel para confirmar a existencia ***
+    ConfirmarExiste = Dir(caminho_pasta, vbDirectory)
+    
+    'Confirma que a pasta existe, caso não exista cria a mesma. ***
+   If ConfirmarExiste = "" Then
+        MsgBox "A pasta 'Declarações_de_Conteúdo' foi criada na Área de Trabalho!"
+        CriarPasta = VBA.Environ("USERPROFILE") + "\Desktop\Declarações_de_Conteúdo"
+        MkDir CriarPasta
+
+End If
+
+
+Call GerandoPDF 'logo abaixo esta a função
+
+
+
+End Sub
+'###GERANDO-PDF-FUNÇÃO###'
+Sub GerandoPDF()
+    
+On Error GoTo Erro
+
+If caixacidade1.Text = "" Or caixanome1.Text = "" Then
+MsgBox "Preencha os campos do remetente"
+Else
+
+    
+    'Worksheets("Declaração").PageSetup.RightMargin = 0.1 ' margem direita
+    Worksheets("Declaração").PageSetup.LeftMargin = 50 ' margem esquerda
+    'Worksheets("Declaração").PageSetup.BottomMargin = 0.1 'margem inferior
+    Worksheets("Declaração").PageSetup.TopMargin = 75 'margem superior
+    
+    'Nota: valores dizem respeito ao distanciamento'
+    
+        
+    seuPdfCaminho = VBA.Environ("USERPROFILE") & "\Desktop\Declarações_de_Conteúdo\"
+    seuPdfNome = Day(Date) & "_" & Month(Date) & "_" & Year(Date) & "_" & Me.caixacidade1.Text & "-" & Me.caixanome1.Text
+    
+    Set intervalo = Sheets("Declaração").Range("A1:J37") 'intervalo
+    intervalo.ExportAsFixedFormat Type:=xlTypePDF, Filename:=seuPdfCaminho & seuPdfNome
+    Application.DisplayAlerts = False
+    MsgBox "PDF Salvo na pasta:" + seuPdfCaminho
+    Exit Sub
+Erro:
+MsgBox "Algum erro aconteceu. Tente novamente.", vbCritical, "ERRO"
+End If
+End Sub
+
+'###IMPRIMIR-MOSTRAR-IMPRESSORAS###'
+Private Sub imprimir_botton_Click()
+Application.Dialogs(xlDialogPrinterSetup).Show
+Sheets("Declaração").PrintOut
+End Sub
+
+
+
+    
+
+'#ABRIR-INSERIR LISTBOX#'
+Private Sub itenslist_dBLcLICK(ByVal Cancel As MSForms.ReturnBoolean)
+DeclaracaoItens.Show
+caixatotaisquant.Text = Sheets("Declaração").Range("G22").Value 'mostra totais de produtos depois do duplo click'
+caixatotaisvalor.Text = Sheets("Declaração").Range("I22").Value
+
+
+End Sub
+
+'###MOSTRAR-PRODUTOS-NA-LISTA###'
+
+Private Sub mostrarprodutos()
+
+'Linha = Sheets("Declaração").Range("A21").End(xlUp).Row - CASO PRECISE DESCOBRIR A ULTIMA LINHA PREENCHIDA'
+
+
+FormularioDeclaracao.itenslist.ColumnCount = 10
+FormularioDeclaracao.itenslist.ColumnHeads = True
+FormularioDeclaracao.itenslist.ColumnWidths = "50;300;00;00;00;00;75;00;75;00" 'leia a nota'
+FormularioDeclaracao.itenslist.RowSource = "Declaração!A16:J21"
+'NOTA: na mesclagem deu 10 colunas, precisa...
+'ter 10 colunas no "ColumnCount", mesmo que no form irá aparecer somente 4. As colunas que aparecem são as 1,2,7,8, portanto as demais devem...
+'ter valor 0 no ColumnWidths!
+
+End Sub
+
+
+
+Private Sub Label19_Click()
+
+End Sub
+
+Private Sub Label23_Click()
+
+End Sub
+
+Private Sub Label24_Click()
+
+End Sub
+
+Private Sub Label9_Click()
+
+End Sub
+
+'###LIMPAR###'
+
+Private Sub limparremetente_Click()
+
+On Error GoTo Erro
+
+
+    caixanome1.Text = ""
+    'caixacpf1.Text = ""
+    caixacidade1.Text = ""
+    caixaend1.Text = ""
+    caixacep1.Text = ""
+    'caixauf1.Text = ""
+    
+    Dim xAF As AutoFilter
+    Dim xFs As Filters
+    Dim xLos As ListObjects
+    Dim xLo As ListObject
+    Dim xRg As Range
+    Dim xWs As Worksheet
+    Dim xIntC, xF1, xF2, xCount As Integer
+    Application.ScreenUpdating = False
+    On Error Resume Next
+    For Each xWs In Application.Worksheets
+        xWs.ShowAllData
+        Set xLos = xWs.ListObjects
+        xCount = xLos.Count
+        For xF1 = 1 To xCount
+         Set xLo = xLos.Item(xF1)
+         Set xRg = xLo.Range
+         xIntC = xRg.Columns.Count
+         For xF2 = 1 To xIntC
+            xLo.Range.AutoFilter Field:=xF2
+         Next
+        Next
+    Next
+    Application.ScreenUpdating = True
+Exit Sub
+Erro:
+MsgBox "Erro de execução!", vbCritical, "ERRO"
+    
+End Sub
+
+'##CAIXA-PESO-TOTAL##'
+
+Private Sub caixapesototal_Change()
+Sheets("Declaração").Range("G23").Value = caixapesototal
+ 
+End Sub
+
+'----------------LIMITA PARA SOMENTE Nº--------------------'
+Private Sub caixapesototal_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+ 
+  If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(caixapesototal.Text) >= 5 Then 'NOTA: Limita para Nº'
+        KeyAscii.Value = 0
+    Else
+    
+End If
+End Sub
+'###LIMPADORES-LISTA###'
+'ITEM 1'
+Private Sub limpartabela1_Click()
+Sheets("Declaração").Range("A16:I16") = ""
+'atualiza totais de produtos depois do duplo click ou click'
+caixatotaisquant.Text = Sheets("Declaração").Range("G22").Value
+caixatotaisvalor.Text = Sheets("Declaração").Range("I22").Value
+End Sub
+'ITEM 2'
+Private Sub limpartabela2_Click()
+Sheets("Declaração").Range("A17:I17") = ""
+'atualiza totais de produtos depois do duplo click ou click'
+caixatotaisquant.Text = Sheets("Declaração").Range("G22").Value
+caixatotaisvalor.Text = Sheets("Declaração").Range("I22").Value
+End Sub
+'ITEM 3'
+Private Sub limpartabela3_Click()
+Sheets("Declaração").Range("A18:I18") = ""
+'atualiza totais de produtos depois do duplo click ou click'
+caixatotaisquant.Text = Sheets("Declaração").Range("G22").Value
+caixatotaisvalor.Text = Sheets("Declaração").Range("I22").Value
+End Sub
+'ITEM 4'
+Private Sub limpartabela4_Click()
+Sheets("Declaração").Range("A19:I19") = ""
+'atualiza totais de produtos depois do duplo click ou click'
+caixatotaisquant.Text = Sheets("Declaração").Range("G22").Value
+caixatotaisvalor.Text = Sheets("Declaração").Range("I22").Value
+End Sub
+'ITEM 5'
+Private Sub limpartabela5_Click()
+Sheets("Declaração").Range("A20:I20") = ""
+'atualiza totais de produtos depois do duplo click ou click'
+caixatotaisquant.Text = Sheets("Declaração").Range("G22").Value
+caixatotaisvalor.Text = Sheets("Declaração").Range("I22").Value
+End Sub
+'ITEM 6'
+Private Sub limpartabela6_Click()
+Sheets("Declaração").Range("A21:I21") = ""
+'atualiza totais de produtos depois do duplo click ou click'
+caixatotaisquant.Text = Sheets("Declaração").Range("G22").Value
+caixatotaisvalor.Text = Sheets("Declaração").Range("I22").Value
+End Sub
+'###LIMPAR-LISTA-TUDO###'
+Private Sub limpartabelatudo_Click()
+Sheets("Declaração").Range("A16:I21") = ""
+'atualiza totais de produtos depois do duplo click ou click'
+caixatotaisquant.Text = Sheets("Declaração").Range("G22").Value
+caixatotaisvalor.Text = Sheets("Declaração").Range("I22").Value
+End Sub
+
+
+
+Private Sub totais_Click()
+
+End Sub
+
+Private Sub UserForm_Activate()
+    'Call HideAll 'chama função ABAIXO
+    Application.Visible = False 'faz sumir excel ao abrir form
+    
+End Sub
+
+'####INICIALIZANDO####'
+
+
+Private Sub UserForm_Initialize()
+'##BOX-LIST##'
+
+On Error GoTo Erro
+
+        
+    Call mostrarprodutos 'dispara a função "mostrar produtos" na list'
+    
+    Call HabilitaBotoes(Me)
+    '###CAMPOS/TEXTOS-PRÉ-DEFINIDOS###'
+    
+    comarcas.Select
+    'NOTA:puxar nome'
+    Dim campo_nome As String 'NOTA:declarando'
+    Dim nome() As String 'NOTA:declarando'
+    campo_nome = Sheets("Declaração").Range("A7").Value 'NOTA:dando valor'
+    nome = Split(campo_nome, ":") 'NOTA:demarcando o ponto 0'
+    caixanome.Value = nome(1) 'NOTA:demarcando o ponto de leitura'
+    'NOTA:puxar a partir de :'
+    
+    'puxar cpf/cnpj'
+    caixacpf.Value = Sheets("Declaração").Range("D13").Value
+    
+    'NOTA:puxar endereço'
+    Dim campo_end As String
+    Dim endereço() As String
+    campo_end = Sheets("Declaração").Range("A9").Value
+    endereço = Split(campo_end, ":")
+    caixaend.Value = endereço(1)
+    
+     'NOTA:puxar cidade'
+    caixacidade.Value = Sheets("Declaração").Range("B12").Value
+    
+    'NOTA:puxar cep'
+    caixacep.Value = Sheets("Declaração").Range("B13").Value
+    
+    
+    'NOTA:puxar uf'
+    Dim campo_uf As String
+    Dim uf() As String
+    campo_uf = Sheets("Declaração").Range("E12").Value
+    uf = Split(campo_uf, ":")
+    caixauf.Value = uf(1)
+    
+    
+    'NOTA:puxar cpf/cnpj detinatário'
+    caixacpf1.Value = Sheets("Declaração").Range("I13").Value
+    
+    'NOTA:puxar uf destinatário'
+    Dim campo_ufdest As String
+    Dim ufdest() As String
+    campo_ufdest = Sheets("Declaração").Range("J12").Value
+    ufdest = Split(campo_ufdest, ":")
+    caixauf1.Value = ufdest(1)
+    
+    '###DATA-FINAL###'
+    Dim dia As String
+    dia = Format(Now, "DD")
+    Sheets("Declaração").Range("C30").Value = dia
+    Sheets("Declaração").Range("C30").HorizontalAlignment = xlCenter
+       
+    Dim mes As String
+    mes = Format(Now, "MMMM")
+    Sheets("Declaração").Range("E30").Value = mes
+    Sheets("Declaração").Range("E30").HorizontalAlignment = xlCenter
+    
+    Dim ano As String
+    ano = Format(Now, "YYYY")
+    Sheets("Declaração").Range("H30").Value = ano
+    Sheets("Declaração").Range("H30").HorizontalAlignment = xlCenter
+    
+    
+    '#assinatura#
+   declarante.Text = Sheets("Declaração").Range("D32").Value
+    
+   
+   '#matricula#'
+   matricula.Text = Sheets("Declaração").Range("G32").Value
+    
+'###COMBOBOX-CIDADES-REMETENTE###'
+    
+comarcas.Range("F3:F1000").Select
+
+caixacidade1.Clear
+
+Call carrega_lista
+    
+
+    
+    Call HideAll 'chama função ABAIXO
+    
+    If declarante = "" Then
+    declarante.Text = "Insira seu nome"
+    End If
+    
+     If matricula = "" Then
+    matricula.Text = "Insira sua matricula"
+    End If
+    
+    
+    Exit Sub
+Erro:
+MsgBox "Erro de inicialização, informe o suporte.", vbCritical, "ERRO"
+        
+End Sub
+
+
+
+
+Private Sub UserForm_Terminate()
+
+
+'####LIMPAR-FILTROS-AO-FECHAR####'
+
+Sheets("Declaração").Range("A16:I21") = "" '##LIMPAR-LISTA-TUDO-AO-FECHAR##'
+'------------------------------------------'
+      Dim xAF As AutoFilter
+    Dim xFs As Filters
+    Dim xLos As ListObjects
+    Dim xLo As ListObject
+    Dim xRg As Range
+    Dim xWs As Worksheet
+    Dim xIntC, xF1, xF2, xCount As Integer
+    Application.ScreenUpdating = False
+    On Error Resume Next
+    For Each xWs In Application.Worksheets
+        xWs.ShowAllData
+        Set xLos = xWs.ListObjects
+        xCount = xLos.Count
+        For xF1 = 1 To xCount
+         Set xLo = xLos.Item(xF1)
+         Set xRg = xLo.Range
+         xIntC = xRg.Columns.Count
+         For xF2 = 1 To xIntC
+            xLo.Range.AutoFilter Field:=xF2
+         Next
+        Next
+    Next
+    Application.ScreenUpdating = True
+    Application.Visible = True 'faz aparecer excel
+    Sheets("Inicio").Activate 'leva para planilha de inicio
+       ThisWorkbook.Save 'salva ao sair
+End Sub
+
+Sub HideAll()
+
+    ActiveWindow.DisplayHorizontalScrollBar = False
+    ActiveWindow.DisplayVerticalScrollBar = False
+    ActiveWindow.DisplayHeadings = False
+    ActiveWindow.DisplayWorkbookTabs = False
+    Application.DisplayFormulaBar = False
+    Application.ExecuteExcel4Macro "show.toolbar(""Ribbon"",False)"
+
+
+End Sub
+
+

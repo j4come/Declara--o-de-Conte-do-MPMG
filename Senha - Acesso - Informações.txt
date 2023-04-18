@@ -1,0 +1,10 @@
+Para acessar o código:
+
+1) Visualizar pelos arquivos TXT's disponibilizados no repostório
+2) Pelo arquivo (Excel):
+
+- Abra o arquivo, na tela inicial marque a caixa "manutenção";
+- Vá em desenvolvedor (se necessário habilitar nas opções do Excel), clique em Visual Basic;
+- Senha para Acesso: Sup0rt3;
+
+Planilha desenvolvida para o setor administrativo e depacho de encomendas do MPMG (ver Power Point).

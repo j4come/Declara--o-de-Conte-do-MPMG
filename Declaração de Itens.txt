@@ -1,0 +1,279 @@
+Private Sub Frame1_Click()
+
+End Sub
+
+'_____________________________________________'
+'##CAMPO-ITENS##'
+Private Sub item1_Change()
+Sheets("Declaração").Range("A16").Value = item1
+item1.MaxLength = 7 'limita quantidade de caracters
+End Sub
+Private Sub item2_Change()
+Sheets("Declaração").Range("A17").Value = item2
+item2.MaxLength = 7 'limita quantidade de caracters
+End Sub
+Private Sub item3_Change()
+Sheets("Declaração").Range("A18").Value = item3
+item3.MaxLength = 7 'limita quantidade de caracters
+End Sub
+Private Sub item4_Change()
+Sheets("Declaração").Range("A19").Value = item4
+item4.MaxLength = 7 'limita quantidade de caracters
+End Sub
+Private Sub item5_Change()
+Sheets("Declaração").Range("A20").Value = item5
+item5.MaxLength = 7 'limita quantidade de caracters
+End Sub
+Private Sub item6_Change()
+Sheets("Declaração").Range("A21").Value = item6
+item6.MaxLength = 7 'limita quantidade de caracters
+End Sub
+'_____________________________________________'
+'##CAMPO-CONTEÚDO##'
+Private Sub conteudo1_Change()
+Sheets("Declaração").Range("B16").Value = conteudo1
+conteudo1.MaxLength = 40 'limita quantidade de caracters'
+
+End Sub
+Private Sub conteudo2_Change()
+Sheets("Declaração").Range("B17").Value = conteudo2
+conteudo2.MaxLength = 40 'limita quantidade de caracters
+End Sub
+Private Sub conteudo3_Change()
+Sheets("Declaração").Range("B18").Value = conteudo3
+conteudo3.MaxLength = 40 'limita quantidade de caracters
+End Sub
+Private Sub conteudo4_Change()
+Sheets("Declaração").Range("B19").Value = conteudo4
+conteudo4.MaxLength = 40 'limita quantidade de caracters
+End Sub
+Private Sub conteudo5_Change()
+Sheets("Declaração").Range("B20").Value = conteudo5
+conteudo5.MaxLength = 40 'limita quantidade de caracters
+End Sub
+Private Sub conteudo6_Change()
+Sheets("Declaração").Range("B21").Value = conteudo6
+conteudo6.MaxLength = 40 'limita quantidade de caracters
+End Sub
+'_____________________________________________'
+'##CAMPO-QUANTIDADE##'
+Private Sub quant1_Change()
+Sheets("Declaração").Range("G16").Value = quant1.Value
+
+End Sub
+'------LIMITA A NÚMEROS------'
+Private Sub quant1_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    'Excel Flex - www.excelflex.com.br/dicas
+    If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(quant1.Text) >= 5 Then
+        KeyAscii.Value = 0
+    Else
+        End If
+        
+        
+    End Sub
+Private Sub quant2_Change()
+Sheets("Declaração").Range("G17").Value = quant2.Value
+End Sub
+Private Sub quant2_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    'Excel Flex - www.excelflex.com.br/dicas
+    If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(quant2.Text) >= 5 Then
+        KeyAscii.Value = 0
+    Else
+        End If
+    End Sub
+Private Sub quant3_Change()
+Sheets("Declaração").Range("G18").Value = quant3.Value
+End Sub
+Private Sub quant3_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    'Excel Flex - www.excelflex.com.br/dicas
+    If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(quant3.Text) >= 5 Then
+        KeyAscii.Value = 0
+    Else
+        End If
+    End Sub
+Private Sub quant4_Change()
+Sheets("Declaração").Range("G19").Value = quant4.Value
+End Sub
+Private Sub quant4_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    'Excel Flex - www.excelflex.com.br/dicas
+    If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(quant4.Text) >= 5 Then
+        KeyAscii.Value = 0
+    Else
+        End If
+    End Sub
+Private Sub quant5_Change()
+Sheets("Declaração").Range("G20").Value = quant5.Value
+End Sub
+Private Sub quant5_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    'Excel Flex - www.excelflex.com.br/dicas
+    If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(quant5.Text) >= 5 Then
+        KeyAscii.Value = 0
+    Else
+        End If
+    End Sub
+Private Sub quant6_Change()
+Sheets("Declaração").Range("G21").Value = quant6.Value
+End Sub
+Private Sub quant6_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    'Excel Flex - www.excelflex.com.br/dicas
+    If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(quant6.Text) >= 5 Then
+        KeyAscii.Value = 0
+    Else
+        End If
+    End Sub
+'_____________________________________________'
+'##CAMPO-VALOR##'
+'1
+Private Sub valor1_Change()
+Sheets("Declaração").Range("i16").Value = valor1.Value
+End Sub
+'------mascara cifrão------'
+Private Sub valor1_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    'Excel Flex - www.excelflex.com.br / dicas
+    If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(valor1.Text) >= 8 Then
+        KeyAscii.Value = 0
+   Else
+        If Len(valor1.Text) = 0 Then
+            valor1.Text = valor1.Text & "$"
+'NOTA: para inserir tudo de uma vez, se usa um IF's/ para em locais separados, coloca-se mais IF's
+        End If
+        End If
+        
+End Sub
+
+
+'2
+Private Sub valor2_Change()
+Sheets("Declaração").Range("i17").Value = valor2.Text
+End Sub
+'------mascara cifrão------'
+Private Sub valor2_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    'Excel Flex - www.excelflex.com.br/dicas
+    If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(valor2.Text) >= 8 Then
+        KeyAscii.Value = 0
+    Else
+        If Len(valor2.Text) = 0 Then
+            valor2.Text = valor2.Text & "$"
+        End If
+    End If
+End Sub
+'3
+Private Sub valor3_Change()
+Sheets("Declaração").Range("i18").Value = valor3.Text
+End Sub
+'------mascara cifrão------'
+Private Sub valor3_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    'Excel Flex - www.excelflex.com.br/dicas
+    If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(valor3.Text) >= 8 Then
+        KeyAscii.Value = 0
+    Else
+        If Len(valor3.Text) = 0 Then
+            valor3.Text = valor3.Text & "$"
+        End If
+    End If
+End Sub
+'4
+Private Sub valor4_Change()
+Sheets("Declaração").Range("i19").Value = valor4.Text
+End Sub
+'------mascara cifrão------'
+Private Sub valor4_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    'Excel Flex - www.excelflex.com.br/dicas
+    If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(valor4.Text) >= 8 Then
+        KeyAscii.Value = 0
+    Else
+        If Len(valor4.Text) = 0 Then
+            valor4.Text = valor4.Text & "$"
+        End If
+    End If
+End Sub
+'5
+Private Sub valor5_Change()
+Sheets("Declaração").Range("i20").Value = valor5.Text
+End Sub
+'------mascara cifrão------'
+Private Sub valor5_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    'Excel Flex - www.excelflex.com.br/dicas
+    If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(valor5.Text) >= 8 Then
+        KeyAscii.Value = 0
+    Else
+        If Len(valor5.Text) = 0 Then
+            valor5.Text = valor5.Text & "$"
+        End If
+    End If
+End Sub
+'6
+Private Sub valor6_Change()
+Sheets("Declaração").Range("i21").Value = valor6.Text
+End Sub
+'------mascara cifrão------'
+Private Sub valor6_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    'Excel Flex - www.excelflex.com.br/dicas
+    If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(valor6.Text) >= 8 Then
+        KeyAscii.Value = 0
+    Else
+        If Len(valor6.Text) = 0 Then
+            valor6.Text = valor6.Text & "$"
+        End If
+    End If
+End Sub
+
+Private Sub fecharitens_Click()
+Unload Me
+End Sub
+
+
+Private Sub Label1_Click()
+
+End Sub
+
+Private Sub Label2_Click()
+
+End Sub
+
+Private Sub Label3_Click()
+
+End Sub
+
+
+
+Private Sub UserForm_Initialize()
+
+'coluna ITENS carrega o que esta na planilha Declaração'
+item1.Value = Sheets("Declaração").Range("A16").Value
+item2.Value = Sheets("Declaração").Range("A17").Value
+item3.Value = Sheets("Declaração").Range("A18").Value
+item4.Value = Sheets("Declaração").Range("A19").Value
+item5.Value = Sheets("Declaração").Range("A20").Value
+item6.Value = Sheets("Declaração").Range("A21").Value
+
+'coluna CONTÉUDO carrega o que esta na planilha Declaração'
+conteudo1.Value = Sheets("Declaração").Range("B16").Value
+conteudo2.Value = Sheets("Declaração").Range("B17").Value
+conteudo3.Value = Sheets("Declaração").Range("B18").Value
+conteudo4.Value = Sheets("Declaração").Range("B19").Value
+conteudo5.Value = Sheets("Declaração").Range("B20").Value
+conteudo6.Value = Sheets("Declaração").Range("B21").Value
+
+'coluna QUANT carrega o que esta na planilha Declaração'
+quant1.Value = Sheets("Declaração").Range("G16").Value
+quant2.Value = Sheets("Declaração").Range("G17").Value
+quant3.Value = Sheets("Declaração").Range("G18").Value
+quant4.Value = Sheets("Declaração").Range("G19").Value
+quant5.Value = Sheets("Declaração").Range("G20").Value
+quant6.Value = Sheets("Declaração").Range("G21").Value
+
+'coluna VALOR carrega o que esta na planilha Declaração'
+valor1.Value = Sheets("Declaração").Range("I16").Value
+valor2.Value = Sheets("Declaração").Range("I17").Value
+valor3.Value = Sheets("Declaração").Range("I18").Value
+valor4.Value = Sheets("Declaração").Range("I19").Value
+valor5.Value = Sheets("Declaração").Range("I20").Value
+valor6.Value = Sheets("Declaração").Range("I21").Value
+
+'
+'
+
+End Sub
+
+

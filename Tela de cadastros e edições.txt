@@ -1,0 +1,478 @@
+Public Sub pesquisar()
+'#COMPLETA OS DEMAIS CAMPOS#
+
+On Error GoTo Erro
+
+Dim Pesquisa As String
+Pesquisa = caixanomecad.Text
+
+If Pesquisa = "" Then
+Else
+
+With comarcas
+    Do
+    Linha = Linha + 1
+    
+    If .Cells(Linha, 1).Text = Pesquisa Or .Cells(Linha, 2).Text = Pesquisa Or .Cells(Linha, 3).Text = Pesquisa Or _
+    .Cells(Linha, 4).Text = Pesquisa Or .Cells(Linha, 5).Text = Pesquisa Or .Cells(Linha, 6).Text = Pesquisa Or .Cells(Linha, 7).Text = Pesquisa _
+     Or .Cells(Linha, 8).Text = Pesquisa Then
+     
+    'O caractere underline quebra a linha do codico sem prejudicar sua execução
+        
+        caixanomecad.Text = .Cells(Linha, 1).Value
+        caixaendcad.Text = .Cells(Linha, 2).Value
+        caixanumerocad.Text = .Cells(Linha, 3).Value
+        caixacompcad.Text = .Cells(Linha, 4).Value
+        caixabairrocad.Text = .Cells(Linha, 5).Value
+        caixacidadecad.Text = .Cells(Linha, 6).Value
+        caixacepcad.Text = .Cells(Linha, 7).Value
+        'caixacpfcad.Text = .Cells(Linha, 9).Value
+        
+End If
+   Loop Until .Cells(Linha, 1).Value = ""
+    'faça ate encontar uma célula vazia
+        'Variável Linha na coluna 2
+End With
+End If
+Exit Sub
+Erro:
+MsgBox "Erro de execução!", vbCritical, "ERRO"
+End Sub
+
+
+Private Sub remetente_frame_Click()
+cadastro.Show
+End Sub
+Private Sub CadastroCheck_Click()
+salvarcadastro.Enabled = True
+End Sub
+
+Private Sub cadastro_Click()
+
+End Sub
+
+Private Sub CADASTROCAD_Click()
+
+caixanomecad.Visible = False
+salvarnomercad.Visible = True
+labelsimbolos.Visible = True
+
+'travamento (enabled)
+cadastrocad.Enabled = False
+
+
+'botões
+voltarcad.Visible = True
+editarcad.Visible = False
+salvarcadastro.Visible = True
+
+'fundo amarelado'
+caixaendcad.BackColor = &H80000018
+caixanumerocad.BackColor = &H80000018
+caixacompcad.BackColor = &H80000018
+caixabairrocad.BackColor = &H80000018
+caixacepcad.BackColor = &H80000018
+caixacidadecad.BackColor = &H80000018
+
+'limpa campos
+
+
+caixaendcad.Text = ""
+caixanumerocad.Text = ""
+caixacompcad.Text = ""
+caixabairrocad.Text = ""
+caixacepcad.Text = ""
+caixacidadecad.Text = ""
+
+
+'desativa trancamento (locked)'
+
+caixaendcad.Locked = False
+caixanumerocad.Locked = False
+caixacompcad.Locked = False
+caixabairrocad.Locked = False
+caixacepcad.Locked = False
+caixacidadecad.Locked = False
+
+
+
+End Sub
+
+Private Sub caixacepcad_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    'Excel Flex - www.excelflex.com.br/dicas
+    If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(caixacepcad.Text) >= 10 Then
+        KeyAscii.Value = 0
+    Else
+        If Len(caixacepcad.Text) = 2 Then 'Posição do "."
+            caixacepcad.Text = caixacepcad.Text & "."
+        End If
+        If Len(caixacepcad.Text) = 6 Then 'Posição do "-"
+            caixacepcad.Text = caixacepcad.Text & "-"
+        End If
+    End If
+    'NOTA: para inserir tudop de uma vez, se usa um IF's/ para em locais separados, coloca-se mais IF's
+    '---> VER CAMPO CEP NO CADASTRO, PARA VER DIFERENÇA
+End Sub
+
+Private Sub caixacpfcad_Change()
+
+End Sub
+Private Sub caixaendcad_Change()
+editarcad.Enabled = True
+End Sub
+
+
+'KeyAscii = Asc(UCase(Chr(KeyAscii)))
+'If (KeyAscii < 65 Or KeyAscii > 90) And (KeyAscii < 97 Or KeyAscii > 122) Then KeyAscii = 0 'impede de digitar numero
+'End Sub
+Private Sub caixanomecad_click()
+Call pesquisar
+End Sub
+'pesquisa por aproximação de palavras
+Private Sub caixanomecad_Change()
+
+Call pesquisar
+
+If caixanomecad.ListIndex <> -1 Then Exit Sub
+    'Se o valr do ComboBox for diferente de nulo
+    If caixanomecad <> "" Then
+        'Limpamos os controles do form
+        caixanomecad.Clear
+        'ListBox1.Clear
+        'Para cada linha preenchida á iniciar pela linha 2 até a ultima
+        For Linha = 2 To ThisWorkbook.Sheets("Comarcas").UsedRange.Rows.Count + 1
+            'Selecionamos a célula
+            Cells(Linha, "A").Select
+            'Se o valor da célula for parecido com o texto do Combo
+            If LCase(Cells(Linha, "A")) Like "*" & LCase(caixanomecad) & "*" Then
+                'Adicionamos o valor da linha aos controles
+                caixanomecad.AddItem Cells(Linha, "A")
+                'ListBox1.AddItem Cells(linha, "P")
+            End If
+        Next
+    Else
+        'Senão, limpamos os controles
+        caixanomecad.Clear
+        'ListBox1.Clear
+    End If
+    
+    
+
+    
+End Sub
+
+
+Private Sub caixanumerocad_Change()
+
+End Sub
+
+Private Sub caixanumerocad_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+ If Not IsNumeric(Chr(KeyAscii.Value)) Or Len(caixanumerocad.Text) >= 10 Then
+        KeyAscii.Value = 0
+    Else
+        End If
+'If (KeyAscii < 65 Or KeyAscii > 90) And (KeyAscii < 97 Or KeyAscii > 122) Then KeyAscii = 0 'bloqueia de digitar numeros
+End Sub
+
+'####CANCELAR####'
+Private Sub cancelarcadastro_Click()
+    FormularioDeclaracao.carrega_lista
+    Unload Me
+End Sub
+
+
+'#EDITAR#'
+
+Private Sub editarcad_Click()
+If caixanomecad = "" Then
+
+MsgBox "Selecione uma comarca para editar!", vbCritical, "ERRO"
+    Exit Sub
+
+End If
+
+'BOTOÕES
+salvareditarcad.Visible = True
+voltareditarcad.Visible = True
+cadastrocad.Visible = False
+
+'travamento
+
+caixanomecad.Enabled = False
+editarcad.Enabled = False
+
+
+'desativa trancamento (locked)'
+
+caixanomecad.Enabled = False
+caixaendcad.Locked = False
+caixanumerocad.Locked = False
+caixacompcad.Locked = False
+caixabairrocad.Locked = False
+caixacepcad.Locked = False
+caixacidadecad.Locked = False
+
+'fundo branco
+
+caixaendcad.BackColor = &H80000005
+caixanumerocad.BackColor = &H80000005
+caixacompcad.BackColor = &H80000005
+caixabairrocad.BackColor = &H80000005
+caixacepcad.BackColor = &H80000005
+caixacidadecad.BackColor = &H80000005
+
+
+
+
+End Sub
+
+
+
+Private Sub Image1_Click()
+
+End Sub
+
+Private Sub salvarnomercad_Change()
+
+End Sub
+
+Private Sub salvarnomercad_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+'If (KeyAscii < 65 Or KeyAscii > 90) And (KeyAscii < 97 Or KeyAscii > 122) Then KeyAscii = 0 'bloqueia de digitar numeros
+End Sub
+
+'#CANCELAR EDIÇÃO#'
+
+Private Sub voltareditarcad_Click()
+
+
+'volta aos trancamentos (locked) iniciais
+caixanomecad.Enabled = True
+editarcad.Enabled = True
+caixaendcad.Locked = True
+caixanumerocad.Locked = True
+caixacompcad.Locked = True
+caixabairrocad.Locked = True
+caixacepcad.Locked = True
+caixacidadecad.Locked = True
+
+
+'BOTÕES
+
+salvareditarcad.Visible = False
+salvarcadastro.Visible = False
+cadastrocad.Visible = True
+voltareditarcad.Visible = True
+voltareditarcad.Visible = False
+
+'fundo cinza
+
+caixaendcad.BackColor = &H8000000F
+caixanumerocad.BackColor = &H8000000F
+caixacompcad.BackColor = &H8000000F
+caixabairrocad.BackColor = &H8000000F
+caixacepcad.BackColor = &H8000000F
+caixacidadecad.BackColor = &H8000000F
+
+'limpa campos
+
+caixanomecad.Text = ""
+caixaendcad.Text = ""
+caixanumerocad.Text = ""
+caixacompcad.Text = ""
+caixabairrocad.Text = ""
+caixacepcad.Text = ""
+caixacidadecad.Text = ""
+
+
+
+
+
+
+
+
+
+End Sub
+
+Private Sub e_Click()
+
+End Sub
+
+'##EDITAR CADASTRO##
+Private Sub salvareditarcad_Click()
+
+On Error GoTo Erro
+
+If caixanomecad = "" Or caixaendcad = "" Or caixanumerocad = "" Or caixacompcad = "" Or caixabairrocad = "" Or caixacepcad = "" Or caixacidadecad = "" Then
+MsgBox "Alguns campos não foram preenchidos!", vbCritical, "ERRO"
+Exit Sub
+End If
+
+Dim Linha As Double
+Linha = 1
+Dim nome As String
+nome = caixanomecad.Value
+    'O comando Dim cria uma variável
+ 
+With comarcas
+    Do
+    Linha = Linha + 1
+    
+    If .Cells(Linha, 1).Value = nome Then
+    'O caractere underline quebra a linha do codico sem prejudicar sua execução
+        
+        .Cells(Linha, 1).Value = caixanomecad.Text
+        .Cells(Linha, 2).Value = caixaendcad.Text
+        .Cells(Linha, 3).Value = caixanumerocad.Text
+        .Cells(Linha, 4).Value = caixacompcad.Text
+        .Cells(Linha, 5).Value = caixabairrocad.Text
+        .Cells(Linha, 6).Value = caixacepcad.Text
+        .Cells(Linha, 7).Value = caixacidadecad.Text
+        
+        'Call Limpar
+
+    MsgBox "Editado com sucesso!", vbInformation, "EDITAR"
+        Unload Me
+        ' Titulo da menssagem entre aspas e maiusculo
+    Exit Sub
+        
+    End If
+    
+    
+    Loop Until .Cells(Linha, 2).Value = ""
+    'faça ate encontar uma célula vazia
+        'Variável Linha na coluna 2
+        MsgBox "Não Encontrado", vbInformation, "EDITAR"
+
+    
+End With
+Exit Sub
+Erro:
+MsgBox "Erro de edição!", vbCritical, "ERRO"
+End Sub
+
+
+Private Sub limparcad_Click()
+caixanomecad.Text = ""
+caixaendcad.Text = ""
+caixanumerocad.Text = ""
+caixacompcad.Text = ""
+caixabairrocad.Text = ""
+caixacidadecad.Text = ""
+caixacepcad.Text = ""
+'caixacpfcad.Text = ""
+End Sub
+
+'####PESQUISAR#####'
+
+Private Sub pesquisacad_Click()
+
+End Sub
+
+
+
+'####SALVAR####
+
+Private Sub salvarcadastro_Click()
+
+If salvarnomercad = "" Or caixacpfcad = "" Or caixacpfcad = "" Or caixaendcad = "" Or caixacepcad = "" Or caixacidadecad = "" Or _
+caixaufcad = "" Then
+
+MsgBox "Preencha todos os campos!", vbCritical, "ERRO"
+    Exit Sub
+
+End If
+
+Dim Linha
+Linha = 1
+    'O comando Dim cria uma variável
+
+With comarcas
+    Do
+    Linha = Linha + 1
+    Loop Until .Cells(Linha, 1).Value = ""
+    'faça ate encontar uma célula vazia
+        'Variável Linha na coluna 2
+    .Cells(Linha, 1).Value = UCase(salvarnomercad.Text) 'comarca
+    .Cells(Linha, 2).Value = UCase(caixaendcad.Text)   'logradouro
+    .Cells(Linha, 3).Value = UCase(caixanumerocad.Text) 'numero
+    .Cells(Linha, 4).Value = UCase(caixacompcad.Text) 'complemento
+    .Cells(Linha, 5).Value = UCase(caixabairrocad.Text) 'bairro
+    .Cells(Linha, 6).Value = UCase(caixacidadecad.Text) 'cidade
+    .Cells(Linha, 7).Value = UCase(caixacepcad.Text) 'cep
+    '.Cells(Linha, 8).Value = caixaufcad.Text
+     .Cells(Linha, 9).Value = UCase(caixacpfcad.Text) 'cpf/cnpj
+     
+     'UCase(xxxx.text) ---> transforma tudo em minusculo"
+    
+    'cadastra pulando sempre pra linha vazia'
+    
+    MsgBox "Cadastro feito com sucesso!"
+    FormularioDeclaracao.carrega_lista 'atualiza lista de cidades'
+    
+    Unload Me
+End With
+
+End Sub
+
+
+Private Sub UserForm_Initialize()
+    comarcas.Select
+'puxar cpf/cnpj detinatário'
+    caixacpfcad.Value = Sheets("Declaração").Range("I13").Value
+    
+    'puxar uf'
+    Dim campo_uf As String
+    Dim uf() As String
+    campo_uf = Sheets("Declaração").Range("E12").Value
+    uf = Split(campo_uf, ":")
+    caixaufcad.Value = uf(1)
+
+End Sub
+
+'CANCELAR CADASTRO'
+Private Sub voltarcad_Click()
+
+salvarnomercad.Visible = False
+caixanomecad.Visible = True
+labelsimbolos.Visible = False
+
+'BOTÕES'
+voltarcad.Visible = False
+salvarcadastro.Visible = False
+editarcad.Visible = True
+
+'fundo branco
+
+caixaendcad.BackColor = &H8000000F
+caixanumerocad.BackColor = &H8000000F
+caixacompcad.BackColor = &H8000000F
+caixabairrocad.BackColor = &H8000000F
+caixacepcad.BackColor = &H8000000F
+caixacidadecad.BackColor = &H8000000F
+
+'limpa campos
+
+caixanomecad.Text = ""
+caixaendcad.Text = ""
+caixanumerocad.Text = ""
+caixacompcad.Text = ""
+caixabairrocad.Text = ""
+caixacepcad.Text = ""
+caixacidadecad.Text = ""
+
+'volta os trancamentos
+
+caixaendcad.Locked = True
+caixanumerocad.Locked = True
+caixacompcad.Locked = True
+caixabairrocad.Locked = True
+caixacepcad.Locked = True
+caixacidadecad.Locked = True
+
+'volta travamento (enabled)
+cadastrocad.Enabled = True
+
+
+
+End Sub
+
